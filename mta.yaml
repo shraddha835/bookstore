@@ -28,7 +28,7 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: bookstore-db
+      - name: gamma-db-hana
       - name: bookstore-auth
 
   - name: bookstore-db-deployer
@@ -37,7 +37,7 @@ modules:
     parameters:
       buildpack: nodejs_buildpack
     requires:
-      - name: bookstore-db
+      - name: gamma-db-hana
 
   - name: project1
     type: html5
@@ -86,7 +86,7 @@ modules:
 
 resources:
 
-  - name: bookstore-db
+  - name: gamma-db-hana
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
