@@ -11,8 +11,8 @@ build-parameters:
   before-all:
     - builder: custom
       commands:
-        - npm ci
         - npx cds build --production
+        - node scripts/fix-hdi-deploy.js
 
 modules:
 
@@ -58,12 +58,12 @@ modules:
         parameters:
           content-target: true
     build-parameters:
-      build-result: app/
+      build-result: artifacts/
       requires:
         - name: project1
           artifacts:
             - project1.zip
-          target-path: app/
+          target-path: artifacts/
 
   - name: bookstore-approuter
     type: approuter.nodejs
@@ -76,6 +76,13 @@ modules:
       - name: bookstore-auth
       - name: bookstore-destination-service
       - name: bookstore-html5-runtime
+      - name: srv-api
+        group: destinations
+        properties:
+          name: bookstore_srv
+          url: ~{srv-url}
+          forwardAuthToken: true
+          strictSSL: false
 
 resources:
 
@@ -92,17 +99,7 @@ resources:
       service-plan: application
       path: xs-security.json
 
-  - name: bookstore-html5-host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-host
 
-  - name: bookstore-html5-runtime
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-host
 
   - name: bookstore-destination-service
     type: org.cloudfoundry.managed-service
@@ -120,3 +117,15 @@ resources:
                 ProxyType: Internet
                 Type: HTTP
                 Authentication: NoAuthentication
+
+  - name: bookstore-html5-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+
+  - name: bookstore-html5-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
