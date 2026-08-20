@@ -30,10 +30,13 @@ jobs:
 
       - name: Install Cloud Foundry CLI
         run: |
-         wget -q -O cf-cli.tgz "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github"
-         tar -xzf cf-cli.tgz
-         sudo mv cf /usr/local/bin/cf
-         cf --version
+          wget -q -O cf-cli.tgz "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github"
+          tar -xzf cf-cli.tgz
+          CF_BINARY=$(find . -maxdepth 2 -type f -name 'cf*' -perm -111 | head -1)
+          echo "Found Cloud Foundry CLI: $CF_BINARY"
+          sudo mv "$CF_BINARY" /usr/local/bin/cf
+          sudo chmod +x /usr/local/bin/cf
+          cf --version
 
       - name: Install MultiApps plugin
         run: |
