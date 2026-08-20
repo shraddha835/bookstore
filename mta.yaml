@@ -65,24 +65,44 @@ modules:
             - project1.zip
           target-path: artifacts/
 
-  - name: bookstore-approuter
-    type: approuter.nodejs
-    path: app/router
-    parameters:
-      memory: 256M
-      disk-quota: 256M
-      keep-existing-routes: true
+  - name: bookstore-destinations
+    type: com.sap.application.content
+    path: .
     requires:
-      - name: bookstore-auth
       - name: bookstore-destination-service
-      - name: bookstore-html5-runtime
-      - name: srv-api
-        group: destinations
-        properties:
-          name: bookstore_srv
-          url: ~{srv-url}
-          forwardAuthToken: true
-          strictSSL: false
+        parameters:
+          content-target: true
+
+      - name: bookstore-auth
+        parameters:
+          service-key:
+            name: bookstore-auth-key
+
+      - name: bookstore-html5-host
+        parameters:
+          service-key:
+            name: bookstore-html5-host-key
+
+    parameters:
+      content:
+        instance:
+          existing_destinations_policy: update
+          destinations:
+
+            - Name: bookstore-html5-repository
+              ServiceInstanceName: bookstore-html5-host
+              ServiceKeyName: bookstore-html5-host-key
+              sap.cloud.service: bookstore
+
+            - Name: bookstore-auth
+              Authentication: OAuth2UserTokenExchange
+              ServiceInstanceName: bookstore-auth
+              ServiceKeyName: bookstore-auth-key
+              sap.cloud.service: bookstore
+
+    build-parameters:
+      no-source: true
+
 
 resources:
 
@@ -99,10 +119,10 @@ resources:
       service-plan: application
       path: xs-security.json
 
-
-
   - name: bookstore-destination-service
     type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
     parameters:
       service: destination
       service-plan: lite
@@ -112,6 +132,15 @@ resources:
           instance:
             existing_destinations_policy: update
             destinations:
+
+              - Name: srv-api
+                URL: ~{srv-api/srv-url}
+                Authentication: NoAuthentication
+                Type: HTTP
+                ProxyType: Internet
+                HTML5.ForwardAuthToken: true
+                HTML5.DynamicDestination: true
+
               - Name: ui5
                 URL: https://ui5.sap.com
                 ProxyType: Internet

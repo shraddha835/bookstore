@@ -6,7 +6,8 @@
 		"i18n": {
 			"bundleUrl": "i18n/i18n.properties",
 			"supportedLocales": [
-				""
+				"",
+				"en"
 			]
 		},
 		"applicationVersion": {
@@ -14,6 +15,19 @@
 		},
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
+		"crossNavigation": {
+			"inbounds": {
+				"Books-display": {
+					"semanticObject": "Books",
+					"action": "display",
+					"title": "{{appTitle}}",
+					"signature": {
+						"parameters": {},
+						"additionalParameters": "allowed"
+					}
+				}
+			}
+		},
 		"resources": "resources.json",
 		"sourceTemplate": {
 			"id": "@sap/generator-fiori:lrop",
@@ -30,6 +44,10 @@
 				}
 			}
 		}
+	},
+	"sap.cloud": {
+		"public": true,
+		"service": "bookstore"
 	},
 	"sap.ui": {
 		"technology": "UI5",
@@ -67,7 +85,8 @@
 				"settings": {
 					"bundleName": "project1.i18n.i18n",
 					"supportedLocales": [
-						""
+						"",
+						"en"
 					]
 				}
 			},
@@ -85,7 +104,8 @@
 				"uri": "i18n/i18n.properties",
 				"settings": {
 					"supportedLocales": [
-						""
+						"",
+						"en"
 					]
 				}
 			}

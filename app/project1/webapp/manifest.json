@@ -9,12 +9,26 @@
     },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
+    "crossNavigation": {
+    "inbounds": {
+      "Books-display": {
+        "semanticObject": "Books",
+        "action": "display",
+        "title": "{{appTitle}}",
+        "signature": {
+          "parameters": {},
+          "additionalParameters": "allowed"
+        }
+      }
+    }
+  },
     "resources": "resources.json",
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.30.0",
       "toolsId": "45445989-d3d2-4155-b8f7-a2032d806634"
     },
+    
     "dataSources": {
       "mainService": {
         "uri": "/odata/v4/catalog/",
@@ -26,6 +40,11 @@
       }
     }
   },
+
+  "sap.cloud": {
+    "public": true,
+    "service": "bookstore"
+},
   "sap.ui": {
     "technology": "UI5",
     "icons": {
