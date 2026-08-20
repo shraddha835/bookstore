@@ -1,0 +1,49 @@
+name: Deploy Bookstore to SAP BTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install MBT
+        run: npm install -g mbt
+
+      - name: Install project dependencies
+        run: npm install
+
+      - name: Build MTAR
+        run: mbt build
+
+      - name: Install Cloud Foundry CLI
+        uses: cloudfoundry/cli@v2
+
+      - name: Install MultiApps plugin
+        run: |
+          cf add-plugin-repo CF-Community https://plugins.cloudfoundry.org
+          cf install-plugin multiapps -r CF-Community -f
+
+      - name: Login to SAP BTP
+        run: |
+          cf api "${{ secrets.CF_API }}"
+          cf auth "${{ secrets.CF_USERNAME }}" "${{ secrets.CF_PASSWORD }}"
+          cf target \
+            -o "${{ secrets.CF_ORG }}" \
+            -s "${{ secrets.CF_SPACE }}"
+
+      - name: Deploy MTAR
+        run: |
+          cf deploy mta_archives/bookstore_1.0.0.mtar -f

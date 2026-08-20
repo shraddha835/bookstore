@@ -1,7 +1,11 @@
 node_modules/
 gen/
+dist/
 resources/
 mta_archives/
+artifacts/
+META-INF/
 .env
 *.log
 db.sqlite
+mta.yaml.backup
