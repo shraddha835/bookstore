@@ -1,4 +1,4 @@
-name: Deploy Bookstore to SAP BTP
+name: Deploy Bookstore to SAP BTP # CI/CD
 
 on:
   push:
